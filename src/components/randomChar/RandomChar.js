@@ -8,19 +8,12 @@ import mjolnir from "../../resources/img/mjolnir.png";
 class RandomChar extends Component {
   constructor(props) {
     super(props);
-    console.log("constructor");
   }
   // Публичные поля классов
   // Свойство state теперь лаконично объявлено в начале класса.
   // Нам больше не нужен конструктор только для того, чтобы определить некоторые поля.
   state = {
-    char: {
-      name: null,
-      description: null,
-      thumbnail: null,
-      homepage: null,
-      wiki: null,
-    },
+    char: {},
     isLoading: true,
     isError: false,
   };
@@ -31,12 +24,17 @@ class RandomChar extends Component {
     this.setState({ char, isLoading: false });
   };
 
+  onCharLoading = () => {
+    this.setState({ isLoading: true });
+  };
+
   onError = () => {
     this.setState({ isLoading: false, isError: true });
   };
 
   updateChar = async () => {
     const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
+    this.onCharLoading();
     // По умолчанию в целопчку then приходит аргумент, и если мы передаем внутрь функцию
     // то аргумент будет автоматически подставлен в функцию this.onCharLoaded
     await this.marvelService
@@ -54,7 +52,6 @@ class RandomChar extends Component {
     const errorMessage = isError && <ErrorMessage />;
     const spinner = isLoading && <Spinner />;
     const content = !(isLoading || isError) && <View char={char} />;
-    console.log("render");
 
     return (
       <div className="randomchar">
